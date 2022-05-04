@@ -3,14 +3,17 @@
 namespace App\Service;
 
 use App\Contract\OrderServiceInterface;
-use App\Entity\Order;
+use App\Entity\Order as OrderEntity;
+use App\Model\Order;
 use App\Repository\BranchRepository;
 use App\Repository\Contract\BottomRepositoryInterface;
 use App\Repository\Contract\BranchRepositoryInterface;
+use App\Repository\Contract\OrderRepositoryInterface;
 use App\Repository\Contract\OrderStatusRepositoryInterface;
 use App\Repository\Contract\ToppingRepositoryInterface;
 use App\Repository\Contract\UpdateMediumRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class OrderService implements OrderServiceInterface
 {
@@ -20,6 +23,7 @@ class OrderService implements OrderServiceInterface
     private ToppingRepositoryInterface $toppingRepository;
     private OrderStatusRepositoryInterface $orderStatusRepository;
     private UpdateMediumRepositoryInterface $updateMediumRepository;
+    private OrderRepositoryInterface $orderRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -27,7 +31,8 @@ class OrderService implements OrderServiceInterface
         BottomRepositoryInterface $bottomRepository,
         ToppingRepositoryInterface $toppingRepository,
         OrderStatusRepositoryInterface $orderStatusRepository,
-        UpdateMediumRepositoryInterface $updateMediumRepository
+        UpdateMediumRepositoryInterface $updateMediumRepository,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->entityManager = $entityManager;
         $this->branchRepository = $branchRepository;
@@ -35,43 +40,46 @@ class OrderService implements OrderServiceInterface
         $this->toppingRepository = $toppingRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->updateMediumRepository = $updateMediumRepository;
+        $this->orderRepository = $orderRepository;
     }
 
-    /**
-     * Bla bla bla
-     *
-     * @return string
-     */
-    public function test(): string
+    /** {@inheritDoc} */
+    public function storeOrder(Order $order): bool
     {
         $em = $this->entityManager;
 
-        $branch = $this->branchRepository->findOneBy(['name' => 'New York Pizza']);
-        $bottom = $this->bottomRepository->findOneBy(['name' => 'Classic']);
-        $topping = $this->toppingRepository->findOneBy(['name' => 'Hawaii']);
-        $orderStatus = $this->orderStatusRepository->find(1);
-        $updateMedium = $this->updateMediumRepository->findOneBy(['name' => 'SMS']);
+        try {
+            $orderStatus = $this->orderStatusRepository->find(1);
+            $updateMedium = $this->updateMediumRepository->findOneBy(['name' => 'SMS']);
 
-        $order = new Order();
-        $order->setBranch($branch);
-        $order->setBottom($bottom);
-        $order->setTopping($topping);
-        $order->setStatus($orderStatus);
-        $order->setUpdateMedium($updateMedium);
+            $orderEntity = new OrderEntity();
+            $orderEntity->setBranch($order->getBranch());
+            $orderEntity->setBottom($order->getBottom());
+            $orderEntity->setTopping($order->getTopping());
+            $orderEntity->setStatus($orderStatus);
+            $orderEntity->setUpdateMedium($updateMedium);
 
-        dump($branch, $order);
+            $em->persist($orderEntity);
+            $em->flush();
+        } catch (Exception $exception) {
+            return false;
+        }
 
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $em->persist($order);
+        return true;
+    }
 
-        // actually executes the queries (i.e. the INSERT query)
-        $em->flush();
+    /** {@inheritDoc} */
+    public function getOrders(): array
+    {
+        // get all order entities from (any) storage
+        $orderEntities = $this->orderRepository->findAll();
+        $orders = [];
 
-//        $myOrder = $em->find(Order::class, 1);
-//        dump($myOrder);
-//        dump($myOrder->getUpdateMedium()->getName());
+        // map entities to domain model objects
+        foreach ($orderEntities as $orderEntity) {
+            $orders[] = Order::create($orderEntity->getBranch(), $orderEntity->getBottom(), $orderEntity->getTopping());
+        }
 
-
-        return 'werwwre';
+        return $orders;
     }
 }

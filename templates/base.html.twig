@@ -7,9 +7,47 @@
         {% endblock %}
 
         {% block javascripts %}
+            <style>
+                html {
+                    padding: 1em;
+                    font-family: Arial, serif;
+                    color: #333;
+                }
+
+                h1 {
+                    margin-bottom: .1em;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                }
+
+                th {
+                    text-align: left;
+                }
+
+                td {
+                    width: 300px;
+                    text-align: left;
+                    border: 1px solid #333;
+                }
+            </style>
         {% endblock %}
     </head>
     <body>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('failure') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
     </body>
 </html>

@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Contract\OrderServiceInterface;
+use App\Form\OrderType;
+use App\Model\Order;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,23 +23,37 @@ class ShopController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        dump($this->orderService->test());
+        $order = new Order();
+        $orderForm = $this->createForm(OrderType::class, $order);
+        $orderForm->handleRequest($request);
 
+        if ($orderForm->isSubmitted() && $orderForm->isValid()) {
+            /** @var Order $order */
+            $order = $orderForm->getData();
 
+            if ($this->orderService->storeOrder($order)) {
+                $this->addFlash('success', 'Uw bestelling is ontvangen!');
+            } else {
+                $this->addFlash('failure', 'Uw bestelling is helaas niet goed ontvangen...');
+            }
+
+            return $this->redirectToRoute('home');
+        }
 
         return $this->render('shop/index.html.twig', [
-            'controller_name' => 'ShopController',
+            'form' => $orderForm->createView(),
+            'orders' => $this->orderService->getOrders()
         ]);
     }
 
-    #[Route('/order', name: 'place_order')]
-    public function placeOrder(): Response
-    {
-        return $this->render('shop/index.html.twig', [
-            'controller_name' => 'ShopController',
-        ]);
-    }
+//    #[Route('/order', name: 'place_order')]
+//    public function placeOrder(): Response
+//    {
+//        return $this->render('shop/index.html.twig', [
+//            'controller_name' => 'ShopController',
+//        ]);
+//    }
 
 }
