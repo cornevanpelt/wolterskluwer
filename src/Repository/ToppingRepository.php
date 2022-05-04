@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Topping;
+use App\Repository\Contract\ToppingRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -14,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Topping[]    findAll()
  * @method Topping[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ToppingRepository extends ServiceEntityRepository
+class ToppingRepository extends ServiceEntityRepository implements ToppingRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

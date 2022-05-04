@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Bottom;
+use App\Repository\Contract\BottomRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -14,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Bottom[]    findAll()
  * @method Bottom[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BottomRepository extends ServiceEntityRepository
+class BottomRepository extends ServiceEntityRepository implements BottomRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

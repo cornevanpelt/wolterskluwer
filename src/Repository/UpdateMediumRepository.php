@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\UpdateMedium;
+use App\Repository\Contract\UpdateMediumRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -14,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method UpdateMedium[]    findAll()
  * @method UpdateMedium[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UpdateMediumRepository extends ServiceEntityRepository
+class UpdateMediumRepository extends ServiceEntityRepository implements UpdateMediumRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

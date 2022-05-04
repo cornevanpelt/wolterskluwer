@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Branch;
+use App\Repository\Contract\BranchRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -14,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Branch[]    findAll()
  * @method Branch[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BranchRepository extends ServiceEntityRepository
+class BranchRepository extends ServiceEntityRepository implements BranchRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

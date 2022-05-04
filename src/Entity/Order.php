@@ -14,7 +14,7 @@ class Order
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(inversedBy: 'foodOrder', targetEntity: Branch::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Branch::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private $branch;
 
@@ -44,7 +44,7 @@ class Order
         return $this->branch;
     }
 
-    public function setBranch(Branch $branch): self
+    public function setBranch(?Branch $branch): self
     {
         $this->branch = $branch;
 

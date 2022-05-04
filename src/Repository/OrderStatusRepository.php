@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\OrderStatus;
+use App\Repository\Contract\OrderStatusRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -14,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method OrderStatus[]    findAll()
  * @method OrderStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OrderStatusRepository extends ServiceEntityRepository
+class OrderStatusRepository extends ServiceEntityRepository implements OrderStatusRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BranchRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BranchRepository::class)]
@@ -19,8 +20,8 @@ class Branch
     #[ORM\Column(type: 'boolean')]
     private $hasDelivery;
 
-    #[ORM\OneToOne(mappedBy: 'branch', targetEntity: Order::class, cascade: ['persist', 'remove'])]
-    private $foodOrder;
+    #[ORM\OneToMany(mappedBy: 'branch', targetEntity: Order::class)]
+    private $orders;
 
     #[ORM\Column(type: 'boolean')]
     private $hasTakeaway;
@@ -79,6 +80,36 @@ class Branch
     public function setHasTakeaway(bool $hasTakeaway): self
     {
         $this->hasTakeaway = $hasTakeaway;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setStatus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getStatus() === $this) {
+                $order->setStatus(null);
+            }
+        }
 
         return $this;
     }
