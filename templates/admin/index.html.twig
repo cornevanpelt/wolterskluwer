@@ -12,18 +12,17 @@
                 var orderStateId = $(this).val();
 
                 $.ajax({
-                    method: 'POST',
+                    method: 'PUT',
                     url: '/order/state',
                     data: {
                       orderId: orderId,
                       orderStateId: orderStateId
                     },
                     success: function (response) {
-                        // $('#tab-company-users').html(response);
-                        console.log(response);
+                        // TODO: implement a way to inform the user that the status update has succeeded
                     },
                     error: function (response, status, error) {
-                        console.log('state has NOT changed!');
+                        // TODO: implement a way to inform the user that the status update has failed
                     }
                 });
             });
@@ -33,7 +32,7 @@
 
 {% block body %}
 
-    <h1>1. Bestellingen</h1>
+    <h1>1. Bestellingen ({{ branchName }})</h1>
     <hr />
 
     <table>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Contract\OrderServiceInterface;
@@ -14,9 +16,6 @@ class ShopController extends AbstractController
 {
     private OrderServiceInterface $orderService;
 
-    /**
-     * @param OrderServiceInterface $orderService
-     */
     public function __construct(OrderServiceInterface $orderService)
     {
         $this->orderService = $orderService;

@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Controller;
 
 use App\Contract\OrderServiceInterface;
-use App\Entity\Admin\AdminOrder;
-use App\Entity\Admin\OrderOverview;
-use App\Form\OrderOverviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,29 +19,20 @@ class AdminController extends AbstractController
         $this->orderService = $orderService;
     }
 
-    #[Route('/admin', name: 'admin_home')]
-    public function index(Request $request): Response
+    #[Route('/admin/{branchId}', name: 'admin_home', requirements: ['branchId' => '\d+'])]
+    public function index(Request $request, array $_route_params): Response
     {
-        $orders = $this->orderService->getOrders();
-        $orderStates = $this->orderService->getOrderStates();
+        if (!is_null($branch = $this->orderService->getBranch(intval($_route_params['branchId'])))) {
+            $orders = $this->orderService->getOrdersByBranch($branch);
+            $orderStates = $this->orderService->getOrderStates();
 
-        return $this->render('admin/index.html.twig', [
-            'orders' => $orders,
-            'states' => $orderStates
-        ]);
-    }
+            return $this->render('admin/index.html.twig', [
+                'branchName' => $branch->getName(),
+                'orders' => $orders,
+                'states' => $orderStates
+            ]);
+        }
 
-    /**
-     * Update state of given order
-     */
-    #[Route('/order/state', name: 'order_state')]
-    public function updateOrderState(Request $request)
-    {
-        $orderStateId = $request->get('orderStateId');
-        $orderId = $request->get('orderId');
-
-        $updateSuccess = $this->orderService->updateOrderState($orderId, $orderStateId);
-
-        return new Response($updateSuccess);
+        return new Response('No branch found', Response::HTTP_NOT_FOUND);
     }
 }

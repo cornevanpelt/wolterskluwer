@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Service;
 
 use App\Contract\OrderServiceInterface;
+use App\Entity\Branch;
 use App\Entity\Order as OrderEntity;
 use App\Form\Model\Order;
 use App\Repository\BranchRepository;
@@ -73,6 +76,26 @@ class OrderService implements OrderServiceInterface
     {
         // get all order entities from (any) storage
         return $this->orderRepository->findAll();
+    }
+
+    /** {@inheritDoc} */
+    public function getOrdersByBranch(Branch $branch): ?array
+    {
+        $qb = ($this->entityManager->createQueryBuilder())
+            ->select('o')
+            ->from(OrderEntity::class, 'o')
+            ->where('o.branch = ?1')
+            ->setParameters([1 => $branch]);
+
+        $ordersByBranch = $qb->getQuery()->getResult();
+
+        return is_array($ordersByBranch) ? $ordersByBranch : null;
+    }
+
+    /** {@inheritDoc} */
+    public function getBranch(int $branchId): ?Branch
+    {
+        return $this->branchRepository->find($branchId);
     }
 
     /** {@inheritDoc} */

@@ -53,6 +53,14 @@
             </div>
         {% endfor %}
 
+        <table>
+            <tr>
+                <td><a href="{{ path('home') }}">Klantpagina</a></td>
+                <td><a href="{{ path('admin_home', { 'branchId': 1 }) }}">Admin Dominos</a></td>
+                <td><a href="{{ path('admin_home', { 'branchId': 2 }) }}">Admin New York Pizza</a></td>
+            </tr>
+        </table>
+
         {% block body %}{% endblock %}
     </body>
 </html>
