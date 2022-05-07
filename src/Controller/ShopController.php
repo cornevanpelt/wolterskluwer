@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Contract\OrderServiceInterface;
+use App\Form\Model\Order;
 use App\Form\OrderType;
-use App\Model\Order;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,13 +47,4 @@ class ShopController extends AbstractController
             'orders' => $this->orderService->getOrders()
         ]);
     }
-
-//    #[Route('/order', name: 'place_order')]
-//    public function placeOrder(): Response
-//    {
-//        return $this->render('shop/index.html.twig', [
-//            'controller_name' => 'ShopController',
-//        ]);
-//    }
-
 }

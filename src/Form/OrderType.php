@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\Bottom;
 use App\Entity\Branch;
 use App\Entity\Topping;
-use App\Model\Order;
+use App\Form\Model\Order;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

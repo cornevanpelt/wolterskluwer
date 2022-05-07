@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order form{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script>
+        $(function() {
+            $('body').on('change', '.order-state', function () {
+                var orderId = $(this).data('order-id');
+                var orderStateId = $(this).val();
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/order/state',
+                    data: {
+                      orderId: orderId,
+                      orderStateId: orderStateId
+                    },
+                    success: function (response) {
+                        // $('#tab-company-users').html(response);
+                        console.log(response);
+                    },
+                    error: function (response, status, error) {
+                        console.log('state has NOT changed!');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <h1>1. Bestellingen</h1>
+    <hr />
+
+    <table>
+        <thead>
+        <tr>
+            <th>Bodem</th>
+            <th>Topping</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.bottom.name }}</td>
+                <td>{{ order.topping.name }}</td>
+                <td>
+                    <select name="state" class="order-state" data-order-id="{{ order.id }}">
+                        {% for state in states %}
+                            {% if (order.status.id == state.id) %}
+                                <option selected value="{{ state.id }}">{{ state.name }}</option>
+                            {% else %}
+                                <option value="{{ state.id }}">{{ state.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Contract\OrderServiceInterface;
 use App\Entity\Order as OrderEntity;
-use App\Model\Order;
+use App\Form\Model\Order;
 use App\Repository\BranchRepository;
 use App\Repository\Contract\BottomRepositoryInterface;
 use App\Repository\Contract\BranchRepositoryInterface;
@@ -53,9 +53,9 @@ class OrderService implements OrderServiceInterface
             $updateMedium = $this->updateMediumRepository->findOneBy(['name' => 'SMS']);
 
             $orderEntity = new OrderEntity();
-            $orderEntity->setBranch($order->getBranch());
-            $orderEntity->setBottom($order->getBottom());
-            $orderEntity->setTopping($order->getTopping());
+            $orderEntity->setBranch($order->branch);
+            $orderEntity->setBottom($order->bottom);
+            $orderEntity->setTopping($order->topping);
             $orderEntity->setStatus($orderStatus);
             $orderEntity->setUpdateMedium($updateMedium);
 
@@ -72,14 +72,28 @@ class OrderService implements OrderServiceInterface
     public function getOrders(): array
     {
         // get all order entities from (any) storage
-        $orderEntities = $this->orderRepository->findAll();
-        $orders = [];
+        return $this->orderRepository->findAll();
+    }
 
-        // map entities to domain model objects
-        foreach ($orderEntities as $orderEntity) {
-            $orders[] = Order::create($orderEntity->getBranch(), $orderEntity->getBottom(), $orderEntity->getTopping());
+    /** {@inheritDoc} */
+    public function getOrderStates(): array
+    {
+        return $this->orderStatusRepository->findAll();
+    }
+
+    /** {@inheritDoc} */
+    public function updateOrderState(int $orderId, int $orderState): bool
+    {
+        try {
+            $orderState = $this->orderStatusRepository->find($orderState);
+            $order = $this->orderRepository->find($orderId);
+            $order->setStatus($orderState);
+
+            $this->entityManager->flush();
+        } catch (Exception $exception) {
+            return false;
         }
 
-        return $orders;
+        return true;
     }
 }

@@ -35,7 +35,7 @@
             {% for order in orders %}
                 <tr>
                     <td>{{ order.getTopping().getName() }} ({{ order.getBottom().getName() }})</td>
-                    <td>d</td>
+                    <td>{{ order.getStatus().getName() }}</td>
                 </tr>
             {% endfor %}
         </tbody>
