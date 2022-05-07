@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -22,11 +22,11 @@ class OrderController extends AbstractController
     #[Route('/order/state', name: 'order_state', methods: ['PUT'])]
     public function updateOrderState(Request $request)
     {
-        $orderStateId = $request->get('orderStateId');
-        $orderId = $request->get('orderId');
+        $orderStateId = intval($request->get('orderStateId'));
+        $orderId = intval($request->get('orderId'));
 
         $updateSuccess = $this->orderService->updateOrderState($orderId, $orderStateId);
 
-        return new Response($updateSuccess);
+        return new Response(strval($updateSuccess));
     }
 }
