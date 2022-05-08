@@ -35,34 +35,37 @@
     <h1>1. Bestellingen ({{ branchName }})</h1>
     <hr />
 
-    <table>
-        <thead>
-        <tr>
-            <th>Bodem</th>
-            <th>Topping</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
+    {% if orders is not null %}
+        <table>
+            <thead>
             <tr>
-                <td>{{ order.bottom.name }}</td>
-                <td>{{ order.topping.name }}</td>
-                <td>
-                    <select name="state" class="order-state" data-order-id="{{ order.id }}">
-                        {% for state in states %}
-                            {% if (order.status.id == state.id) %}
-                                <option selected value="{{ state.id }}">{{ state.name }}</option>
-                            {% else %}
-                                <option value="{{ state.id }}">{{ state.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </td>
+                <th>Bodem</th>
+                <th>Topping</th>
+                <th>Status</th>
             </tr>
-        {% endfor %}
-
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.bottom.name }}</td>
+                        <td>{{ order.topping.name }}</td>
+                        <td>
+                            <select name="state" class="order-state" data-order-id="{{ order.id }}">
+                                {% for state in states %}
+                                    {% if (order.status.id == state.id) %}
+                                        <option selected value="{{ state.id }}">{{ state.name }}</option>
+                                    {% else %}
+                                        <option value="{{ state.id }}">{{ state.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Geen bestellingen gevonden.</p>
+    {% endif %}
 
 {% endblock %}
