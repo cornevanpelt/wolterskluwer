@@ -7,7 +7,6 @@ namespace App\Service;
 use App\Contract\OrderServiceInterface;
 use App\Entity\Branch;
 use App\Entity\Order as OrderEntity;
-use App\Entity\User;
 use App\Event\OrderStatusEvent;
 use App\Form\Model\Order;
 use App\Repository\BranchRepository;
@@ -18,7 +17,6 @@ use App\Repository\Contract\OrderStatusRepositoryInterface;
 use App\Repository\Contract\ToppingRepositoryInterface;
 use App\Repository\Contract\UpdateMediumRepositoryInterface;
 use App\Repository\Contract\UserRepositoryInterface;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -127,7 +125,6 @@ class OrderService implements OrderServiceInterface
 
             $this->entityManager->flush();
             $this->dispatchOrderStatusEvent($order);
-
         } catch (Exception $exception) {
             return false;
         }
