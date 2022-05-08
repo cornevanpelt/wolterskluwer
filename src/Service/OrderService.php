@@ -64,7 +64,6 @@ class OrderService implements OrderServiceInterface
             // TODO: obviously normally this user is not hard-coded but managed by the authentication system
             $user = $this->userRepository->find(1);
             $orderStatus = $this->orderStatusRepository->find(1);
-            $updateMedium = $this->updateMediumRepository->findOneBy(['name' => 'SMS']);
 
             $orderEntity = new OrderEntity();
             $orderEntity->setBranch($order->branch);
