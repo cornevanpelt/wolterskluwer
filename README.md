@@ -1,7 +1,9 @@
 # Schulinck Assessment
-Dit is een Proof-of-Concept applicatie voor een pizza bestelservice.
+Dit is een Proof-of-Concept applicatie voor een pizza bestelservice.   
+
 De intentie is om een OO backend te demonsteren welke als basis (of puur alleen als PoC) zou kunnen dienen voor een productie-waardige applicatie als er later bv. nog een gebruiksvriendelijke front-end wordt toegevoegd en zaken als exception handling, caching en validatie fatsoenlijk geregeld worden.
-De applicatie is opgezet op basis van Symfony 6 waardoor hij al direct een goede structuur heeft. De business logic op een object georienteerde manier opgezet waardoor de classes ook hergebruikt zouden kunnen worden in een andere structuur.
+
+De applicatie is opgezet op basis van Symfony 6 waardoor hij al direct een goede structuur heeft. De business logic op een object georienteerde manier opgezet waardoor de classes ook hergebruikt zouden kunnen worden in een andere structuur.   
 
 **Omgevingsvereisten**
 - PHP >=8.0
@@ -17,7 +19,7 @@ De applicatie is opgezet op basis van Symfony 6 waardoor hij al direct een goede
 4) Configureer de database connectie door middel van de DATABASE_URL in /.env (bv. DATABASE_URL="mysql://user:pass@127.0.0.1:3306/dbname?serverVersion=8.0.28&charset=utf8mb4")
 5) Maak de database aan "bin/console doctrine:database:create"
 6) Maak de inhoud van de database aan door het runnen van de migrations "bin/console doctrine:migrations:execute" (er zit hard-coded dummy data in de migrations)
-7) Start de build-in web server "symfony server" (of de PHP build-in webserver als Symfony CLI niet geinstalleerd is "php -S localhost:8000 -t public")
+7) Start de build-in web server "symfony serve" (of de PHP build-in webserver als Symfony CLI niet geinstalleerd is "php -S localhost:8000 -t public")
 8) Ga naar http://localhost:{port} (zie output van stap 7 om de poort te bepalen)
 9) Door middel van de links bovenaan de pagina kan tussen de klantpagina en de admin pagina voor elk van de pizzeria's worden gewisseld
 
