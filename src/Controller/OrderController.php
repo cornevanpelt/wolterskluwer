@@ -19,7 +19,8 @@ class OrderController extends AbstractController
         $this->orderService = $orderService;
     }
 
-    #[Route('/order/state', name: 'order_state', methods: ['PUT'])]
+//    #[Route('/order/state', name: 'order_state', methods: ['PUT'])]
+    #[Route('/order/state', name: 'order_state')]
     public function updateOrderState(Request $request)
     {
         $orderStateId = intval($request->get('orderStateId'));

@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Contract\OrderServiceInterface;
 use App\Entity\Branch;
 use App\Entity\Order as OrderEntity;
+use App\Event\OrderStatusEvent;
 use App\Form\Model\Order;
 use App\Repository\BranchRepository;
 use App\Repository\Contract\BottomRepositoryInterface;
@@ -17,6 +18,7 @@ use App\Repository\Contract\ToppingRepositoryInterface;
 use App\Repository\Contract\UpdateMediumRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class OrderService implements OrderServiceInterface
 {
@@ -27,6 +29,7 @@ class OrderService implements OrderServiceInterface
     private OrderStatusRepositoryInterface $orderStatusRepository;
     private UpdateMediumRepositoryInterface $updateMediumRepository;
     private OrderRepositoryInterface $orderRepository;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -35,7 +38,8 @@ class OrderService implements OrderServiceInterface
         ToppingRepositoryInterface $toppingRepository,
         OrderStatusRepositoryInterface $orderStatusRepository,
         UpdateMediumRepositoryInterface $updateMediumRepository,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->branchRepository = $branchRepository;
@@ -44,6 +48,7 @@ class OrderService implements OrderServiceInterface
         $this->orderStatusRepository = $orderStatusRepository;
         $this->updateMediumRepository = $updateMediumRepository;
         $this->orderRepository = $orderRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /** {@inheritDoc} */
@@ -113,10 +118,24 @@ class OrderService implements OrderServiceInterface
             $order->setStatus($orderState);
 
             $this->entityManager->flush();
+            $this->dispatchOrderStatusEvent($order);
+
         } catch (Exception $exception) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Dispatch OrderStatusEvent to indicate order status has changed
+     *
+     * @return void
+     */
+    private function dispatchOrderStatusEvent(OrderEntity $order): void
+    {
+        $event = new OrderStatusEvent($order);
+
+        $this->eventDispatcher->dispatch($event, OrderStatusEvent::NAME);
     }
 }
