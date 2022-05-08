@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Contract\OrderServiceInterface;
 use App\Entity\Branch;
 use App\Entity\Order as OrderEntity;
+use App\Entity\User;
 use App\Event\OrderStatusEvent;
 use App\Form\Model\Order;
 use App\Repository\BranchRepository;
@@ -16,6 +17,8 @@ use App\Repository\Contract\OrderRepositoryInterface;
 use App\Repository\Contract\OrderStatusRepositoryInterface;
 use App\Repository\Contract\ToppingRepositoryInterface;
 use App\Repository\Contract\UpdateMediumRepositoryInterface;
+use App\Repository\Contract\UserRepositoryInterface;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,6 +31,7 @@ class OrderService implements OrderServiceInterface
     private ToppingRepositoryInterface $toppingRepository;
     private OrderStatusRepositoryInterface $orderStatusRepository;
     private UpdateMediumRepositoryInterface $updateMediumRepository;
+    private UserRepositoryInterface $userRepository;
     private OrderRepositoryInterface $orderRepository;
     private EventDispatcherInterface $eventDispatcher;
 
@@ -38,6 +42,7 @@ class OrderService implements OrderServiceInterface
         ToppingRepositoryInterface $toppingRepository,
         OrderStatusRepositoryInterface $orderStatusRepository,
         UpdateMediumRepositoryInterface $updateMediumRepository,
+        UserRepositoryInterface $userRepository,
         OrderRepositoryInterface $orderRepository,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -47,6 +52,7 @@ class OrderService implements OrderServiceInterface
         $this->toppingRepository = $toppingRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->updateMediumRepository = $updateMediumRepository;
+        $this->userRepository = $userRepository;
         $this->orderRepository = $orderRepository;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -57,6 +63,8 @@ class OrderService implements OrderServiceInterface
         $em = $this->entityManager;
 
         try {
+            // TODO: obviously normally this user is not hard-coded but managed by the authentication system
+            $user = $this->userRepository->find(1);
             $orderStatus = $this->orderStatusRepository->find(1);
             $updateMedium = $this->updateMediumRepository->findOneBy(['name' => 'SMS']);
 
@@ -65,7 +73,7 @@ class OrderService implements OrderServiceInterface
             $orderEntity->setBottom($order->bottom);
             $orderEntity->setTopping($order->topping);
             $orderEntity->setStatus($orderStatus);
-            $orderEntity->setUpdateMedium($updateMedium);
+            $orderEntity->setUser($user);
 
             $em->persist($orderEntity);
             $em->flush();

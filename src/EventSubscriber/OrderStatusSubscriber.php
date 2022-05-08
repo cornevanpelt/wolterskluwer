@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use App\Event\OrderStatusEvent;
@@ -9,13 +11,17 @@ class OrderStatusSubscriber implements EventSubscriberInterface
 {
     public function onOrderStatusUpdated(OrderStatusEvent $event)
     {
-        // TODO: Check update medium preference of the user attached to this order
         $order = $event->getOrder();
+        $user = $order->getUser();
 
-        die;
+        foreach ($user->getCommunicationPreference()->getValues() as $updateMedium) {
+            echo "Send {$updateMedium->getName()} to {$user->getName()}\n";
+
+            // TODO: Handle sending out an update for this order via the preferred update medium(s) (e.g. SMS and e-mail) to replace the echo above
+        }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             OrderStatusEvent::NAME => 'onOrderStatusUpdated'

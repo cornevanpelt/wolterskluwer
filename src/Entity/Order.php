@@ -30,9 +30,9 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
-    #[ORM\ManyToOne(targetEntity: UpdateMedium::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
-    private $updateMedium;
+    private $user;
 
     public function getId(): ?int
     {
@@ -87,14 +87,14 @@ class Order
         return $this;
     }
 
-    public function getUpdateMedium(): ?UpdateMedium
+    public function getUser(): ?User
     {
-        return $this->updateMedium;
+        return $this->user;
     }
 
-    public function setUpdateMedium(?UpdateMedium $updateMedium): self
+    public function setUser(?User $user): self
     {
-        $this->updateMedium = $updateMedium;
+        $this->user = $user;
 
         return $this;
     }
