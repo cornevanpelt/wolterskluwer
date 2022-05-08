@@ -16,10 +16,10 @@ De applicatie is opgezet op basis van Symfony 6 waardoor hij al direct een goede
 3) Run "composer install"
 4) Configureer de database connectie door middel van de DATABASE_URL in /.env (bv. DATABASE_URL="mysql://user:pass@127.0.0.1:3306/dbname?serverVersion=8.0.28&charset=utf8mb4")
 5) Maak de database aan "bin/console doctrine:database:create"
-6) Maak de inhoud van de database aan door het runnen van de migrations "bin/console doctrine:migrations:execute"
-7) Start de build-in web server "symfony server" (of de build-in PHP webserver als Symfony CLI niet geinstalleerd is "php -S localhost:8000 -t public")
-9) Ga naar http://localhost:{port} (zie output van stap 7 om de poort te bepalen)
-10) Door middel van de links bovenaan de pagina kan tussen de klantpagina en de admin pagina voor elk van de pizzeria's worden gewisseld
+6) Maak de inhoud van de database aan door het runnen van de migrations "bin/console doctrine:migrations:execute" (er zit hard-coded dummy data in de migrations)
+7) Start de build-in web server "symfony server" (of de PHP build-in webserver als Symfony CLI niet geinstalleerd is "php -S localhost:8000 -t public")
+8) Ga naar http://localhost:{port} (zie output van stap 7 om de poort te bepalen)
+9) Door middel van de links bovenaan de pagina kan tussen de klantpagina en de admin pagina voor elk van de pizzeria's worden gewisseld
 
 **Aannames bij het maken van deze PoC applicatie**
 - Front-end is niet belangrijk in deze PoC, het gaat om het OO-design van de backend. Er is dus geen gebruik gemaakt van npm, webpack, encore en/of bootstrap.
